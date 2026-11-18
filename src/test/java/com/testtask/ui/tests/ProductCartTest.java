@@ -7,10 +7,12 @@ import com.testtask.ui.pages.LoginPage;
 import com.testtask.ui.pages.ProductsPage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import io.qameta.allure.Step;
 
 public class ProductCartTest extends BaseTest {
 
-    @Test
+    @Step("Sort products and add to the cart")
+    @Test(groups = {"ui"})
     public void sortedProductIsPresentInCart() {
         ProductsPage productsPage = new LoginPage()
                 .open()

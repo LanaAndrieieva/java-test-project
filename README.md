@@ -45,9 +45,15 @@ Open your terminal in the project root directory and build the image:
 docker build -t qa-automation-tests .
 ```
 ### 2. Execute Tests Inside Docker
-Run the container to execute the test suite:
+# all tests (default testng.xml)
 ```bash
 docker run --rm qa-automation-tests
+```
+
+# API only / UI only
+```bash
+docker run --rm -e SUITE=testng-api.xml qa-automation-tests
+docker run --rm -e SUITE=testng-ui.xml qa-automation-tests
 ```
 
 ## Test Approach

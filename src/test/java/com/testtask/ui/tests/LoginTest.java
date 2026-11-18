@@ -5,10 +5,12 @@ import com.testtask.ui.pages.LoginPage;
 import com.testtask.ui.pages.ProductsPage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import io.qameta.allure.Step;
 
 public class LoginTest extends BaseTest {
 
-    @Test
+    @Step("Login as standard user")
+    @Test(groups = {"ui"})
     public void standardUserReachesProductsPageWithProducts() {
         ProductsPage productsPage = new LoginPage()
                 .open()

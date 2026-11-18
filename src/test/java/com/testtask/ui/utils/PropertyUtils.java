@@ -10,7 +10,7 @@ public final class PropertyUtils {
 
     private PropertyUtils() {
     }
-
+    
     public static Properties loadPagePaths() {
         Properties properties = new Properties();
         try (InputStream input = PropertyUtils.class.getClassLoader().getResourceAsStream("pages.properties")) {

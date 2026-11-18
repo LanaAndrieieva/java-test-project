@@ -5,9 +5,9 @@ import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import org.testng.annotations.Optional;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
+import io.qameta.allure.restassured.AllureRestAssured;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,26 +15,27 @@ public abstract class BaseApiTest {
     static {
         System.setProperty("jsse.enableSNIExtension", "false");
     }
-    protected static final String BASE_URL = "https://herokuapp.com";
+    protected static final String BASE_URL = "https://restful-booker.herokuapp.com";
     protected RequestSpecification requestSpec;
     protected String authToken;
     protected BookingClient bookingClient;
 
-    @Parameters({"api.username", "api.password"})
-    @BeforeClass
-    public void setUp(
-        @Optional("admin") String username,
-        @Optional("password123") String password){
+    @Parameters({ "api.username", "api.password" })
+    @BeforeClass(groups = { "api" }, alwaysRun = true)
+    public void setUp() {
+        String username = System.getProperty("api.username", "admin");
+        String password = System.getProperty("api.password", "password123");
         RestAssured.useRelaxedHTTPSValidation();
         RestAssured.baseURI = BASE_URL;
 
         requestSpec = new RequestSpecBuilder()
-                .setContentType(ContentType.JSON)
-                .setAccept(ContentType.JSON)
+                .addFilter(new AllureRestAssured())
+                .setContentType("application/json")
+                .setAccept("application/json")
                 .build();
 
         authToken = obtainAuthToken(username, password);
-        
+
         bookingClient = new BookingClient(requestSpec);
     }
 

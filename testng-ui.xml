@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="UI Suite">
+    <test name="UI tests">
+        <groups><run><include name="ui"/></run></groups>
+        <packages><package name="com.testtask.ui.tests"/></packages>
+    </test>
+</suite>
