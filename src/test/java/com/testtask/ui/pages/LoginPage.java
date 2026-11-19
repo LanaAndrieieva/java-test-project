@@ -7,13 +7,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class LoginPage extends BasePage {
 
-    @FindBy(id = "user-name")
+    @FindBy(css = "[data-test='username']")
     private WebElement usernameInput;
 
-    @FindBy(id = "password")
+    @FindBy(css = "[data-test='password']")
     private WebElement passwordInput;
 
-    @FindBy(id = "login-button")
+    @FindBy(css = "[data-test='login-button']")
     private WebElement loginButton;
 
     public LoginPage open() {

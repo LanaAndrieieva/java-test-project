@@ -36,25 +36,73 @@ To execute the entire test suite (both UI and API as configured in testng.xml):
 mvn test
 ```
 
-## Docker Execution
-You can run all tests inside a Docker container without needing to install Java, Maven, or local browser drivers.
+## Run with Docker
 
-### 1. Build the Docker Image
-Open your terminal in the project root directory and build the image:
+Requirement: Docker only (no local Java, Maven or Chrome needed).
+
+### 1. Build the image
+
 ```bash
 docker build -t qa-automation-tests .
 ```
-### 2. Execute Tests Inside Docker
-# all tests (default testng.xml)
+
+> Apple Silicon (M1/M2/M3): Chrome in the image is amd64 only, so add
+> `--platform linux/amd64` to both `docker build` and `docker run`.
+
+### 2. Run the tests
+
 ```bash
+# All tests (default testng.xml)
 docker run --rm qa-automation-tests
+
+# API tests only
+docker run --rm -e SUITE=testng-api.xml qa-automation-tests
+
+# UI tests only (headless Chrome)
+docker run --rm --shm-size=2g -e SUITE=testng-ui.xml qa-automation-tests
 ```
 
-# API only / UI only
-```bash
-docker run --rm -e SUITE=testng-api.xml qa-automation-tests
-docker run --rm -e SUITE=testng-ui.xml qa-automation-tests
+### 3. Save the Allure results on disk
+
+The container is removed after the run (`--rm`), so mount a folder to keep the results.
+
+Windows (PowerShell):
+
+```powershell
+Remove-Item -Recurse -Force allure-results -ErrorAction SilentlyContinue
+docker run --rm --shm-size=2g -e SUITE=testng-ui.xml -v "${PWD}/allure-results:/app/target/allure-results" qa-automation-tests
 ```
+
+Linux / macOS:
+
+```bash
+rm -rf allure-results
+docker run --rm --shm-size=2g -e SUITE=testng-ui.xml -v "$(pwd)/allure-results:/app/target/allure-results" qa-automation-tests
+```
+
+Remove old results before each run, otherwise Allure mixes old and new runs.
+
+### 4. View the Allure report
+
+Windows (PowerShell):
+
+```powershell
+docker run --rm -p 5050:5050 -e CHECK_RESULTS_EVERY_SECONDS=5 -v "${PWD}/allure-results:/app/allure-results" frankescobar/allure-docker-service
+```
+
+Linux / macOS:
+
+```bash
+docker run --rm -p 5050:5050 -e CHECK_RESULTS_EVERY_SECONDS=5 -v "$(pwd)/allure-results:/app/allure-results" frankescobar/allure-docker-service
+```
+
+Then open:
+
+```text
+http://localhost:5050/allure-docker-service/latest-report
+```
+
+Stop the report server with `Ctrl+C`.
 
 ## Test Approach
 ### Locators Strategy

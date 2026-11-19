@@ -12,7 +12,7 @@ public abstract class BaseTest {
 
     @AfterMethod(alwaysRun = true)
     public void tearDown(ITestResult result) {
-        if (result.getStatus() == ITestResult.FAILURE && WebDriverSingleton.getInstance() != null) {
+        if (result.getStatus() == ITestResult.FAILURE && WebDriverSingleton.hasInstance()) {
             byte[] screenshot = ((TakesScreenshot) WebDriverSingleton.getInstance()).getScreenshotAs(OutputType.BYTES);
             Allure.addAttachment("Failure Screenshot", "image/png",
                     new ByteArrayInputStream(screenshot), "png");
